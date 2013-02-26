@@ -9,3 +9,6 @@ pause
 %bin% offset -h
 pause
 
+%bin% id -h
+pause
+

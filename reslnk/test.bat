@@ -13,4 +13,9 @@ set dir=res
 echo =^> Generate a C included file listing offsets of resources.
 %reslnk% offset -d%dir% -o%tgt% %src%
 
+set src=res.map
+set tgt=ResID.h
+echo =^> Generate a C header file of resource ID enumeration.
+%reslnk% id -o%tgt% %src%
+
 pause

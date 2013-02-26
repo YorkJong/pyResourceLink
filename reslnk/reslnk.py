@@ -66,6 +66,11 @@ def gen_offset_ifile(lines, res_dir='.', outfile='res_offset.i'):
     pass
 
 
+def gen_id_hfile(lines, outfile=''):
+    """Generate a C header file of resource ID enumeration.
+    """
+    pass
+
 #-----------------------------------------------------------------------------
 
 def parse_args(args):
@@ -74,6 +79,9 @@ def parse_args(args):
 
     def do_offset(args):
         gen_offset_ifile(args.lines, args.dir, args.outfile)
+
+    def do_id(args):
+        gen_id_hfile(args.lines, args.outfile)
 
     # create top-level parser
     parser = argparse.ArgumentParser(description=__doc__)
@@ -84,19 +92,22 @@ def parse_args(args):
 
     #--------------------------------------------------------------------------
 
-    # create the parent parser of common (res_dir, link_file)
-    com = argparse.ArgumentParser(add_help=False)
-    com.set_defaults(dir='.')
-    com.add_argument('lines', metavar='map-file',
+    # create the parent parser of resource map file
+    src = argparse.ArgumentParser(add_help=False)
+    src.add_argument('lines', metavar='map-file',
         type=read_map_file,
         help='The map file of resources.')
-    com.add_argument('-d', '--dir', metavar='<directory>',
+
+    # create the parent parser of resource directory
+    dir = argparse.ArgumentParser(add_help=False)
+    dir.set_defaults(dir='.')
+    dir.add_argument('-d', '--dir', metavar='<directory>',
         help="""assign the <directory> to read resource files.
             The default directory is "%s".
-            """ % com.get_default('dir'))
+            """ % dir.get_default('dir'))
 
     # create the parser for the "link" command
-    sub = subparsers.add_parser('link', parents=[com],
+    sub = subparsers.add_parser('link', parents=[src, dir],
         help='link resource files into single one.')
     sub.set_defaults(func=do_link,
         outfile='res.bin')
@@ -106,13 +117,23 @@ def parse_args(args):
             ''' % sub.get_default('outfile'))
 
     # create the parser for the "offset" command
-    sub = subparsers.add_parser('offset', parents=[com],
+    sub = subparsers.add_parser('offset', parents=[src, dir],
         help='generate a C included file listing byte offsets of resources.')
     sub.set_defaults(func=do_offset,
         outfile='res_offset.i')
     sub.add_argument('-o', '--output', metavar='<file>', dest='outfile',
         help='''place the output into <file>, the C included file listing
             the offsets (default "%s").
+            ''' % sub.get_default('outfile'))
+
+    # create the parser for the "id" command
+    sub = subparsers.add_parser('id', parents=[src],
+        help='generate a C header file of resource ID enumeration.')
+    sub.set_defaults(func=do_id,
+        outfile='ResID.h')
+    sub.add_argument('-o', '--output', metavar='<file>', dest='outfile',
+        help='''place the output into <file>, the C header file of
+            resource ID enumeration (default "%s").
             ''' % sub.get_default('outfile'))
 
     #--------------------------------------------------------------------------

@@ -1,0 +1,6 @@
+:0x00   # start offset (default is 0x00)
+bat.png     # 2877 bytes
+
+:4096
+broom.png   # 3083 bytes
+candle.png  # 2771 bytes

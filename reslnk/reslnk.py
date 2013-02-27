@@ -200,14 +200,14 @@ def map_from_statements(statements, res_dir='res'):
 
 #-----------------------------------------------------------------------------
 
-def link(statements, res_dir='res', outfilename='res.bin'):
+def link(statements, res_dir='res', outfile='res.bin'):
     """Link resources into single file.
     """
     begins, sizes, fns = zip(*map_from_statements(statements, res_dir))
     ends = list(begins[1:]) + [begins[-1] + sizes[-1]]
     spaces = [end - begin for begin, end in zip(begins, ends)]
 
-    with open(outfilename, 'wb') as outfile:
+    with open(outfile, 'wb') as outfile:
         for space, fn in zip(spaces, fns):
             fn = '{path}/{name}'.format(path=res_dir, name=fn)
             with open(fn, 'rb') as infile:

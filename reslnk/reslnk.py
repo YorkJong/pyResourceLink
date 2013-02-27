@@ -335,6 +335,6 @@ def main():
 
 
 if __name__ == '__main__':
-    parse_args(sys.argv[1:])
-    #main()
+    #parse_args(sys.argv[1:])
+    main()
 

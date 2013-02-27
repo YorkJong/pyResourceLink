@@ -8,7 +8,7 @@ enumeration.
 __software__ = "Resource Link"
 __version__ = "0.02"
 __author__ = "Jiang Yu-Kuan <yukuan.jiang@gmail.com>"
-__date__ = "2013/02/26 (initial version) ~ 2013/02/27 (last revision)"
+__date__ = "2013/02/26 (initial version) ~ 2013/02/28 (last revision)"
 
 import os
 import sys
@@ -182,7 +182,7 @@ def res_id_from_filename(fn):
 def map_from_statements(statements, res_dir='res'):
     """Return (offset, size, filename) tuples from statements.
     """
-    pairs = []
+    tuples = []
     offset = 0
     for sta in statements:
         if sta.startswith(':'):
@@ -193,9 +193,9 @@ def map_from_statements(statements, res_dir='res'):
         else:
             fn = '{path}/{name}'.format(path=res_dir, name=sta)
             fsize = os.path.getsize(fn)
-            pairs += [(offset, fsize, sta)]
+            tuples += [(offset, fsize, sta)]
             offset += fsize
-    return pairs
+    return tuples
 
 
 #-----------------------------------------------------------------------------

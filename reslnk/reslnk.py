@@ -179,18 +179,18 @@ def res_id_from_filename(fn):
 
 #-----------------------------------------------------------------------------
 
-def offset_filename_pairs(lines, res_dir='.'):
+def offset_filename_pairs(statements, res_dir='.'):
     pairs = []
     offset = 0
-    for line in lines:
-        if line.startswith(':'):
-            val = eval(line[1:])
+    for sta in statements:
+        if sta.startswith(':'):
+            val = eval(sta[1:])
             if val < offset:
-                raise ValueError('offset too small -> %s' % line)
+                raise ValueError('offset too small -> %s' % sta)
             offset = val
         else:
-            fn = '{path}/{name}'.format(path=res_dir, name=line)
-            pairs += [(offset, line)]
+            fn = '{path}/{name}'.format(path=res_dir, name=sta)
+            pairs += [(offset, sta)]
             fsize = os.path.getsize(fn)
             offset += fsize
     return pairs
@@ -198,27 +198,33 @@ def offset_filename_pairs(lines, res_dir='.'):
 
 #-----------------------------------------------------------------------------
 
-def link(lines, res_dir='.', outfile='res.bin'):
+def link(statements, res_dir='.', outfile='res.bin'):
     """Link resources into single file.
     """
-    pairs = offset_filename_pairs(lines, res_dir)
+    pairs = offset_filename_pairs(statements, res_dir)
     print pairs
+    lines = ['']
+
+    save_utf8_file(outfile, lines)
 
 
-def gen_offset_ifile(lines, res_dir='.', outfile='res_offset.i'):
+def gen_offset_ifile(statements, res_dir='.', outfile='res_offset.i'):
     """Generate a C included file that lists offsets of resources.
     """
-    pairs = offset_filename_pairs(lines, res_dir)
+    pairs = offset_filename_pairs(statements, res_dir)
     pass
+    lines = ['']
+
+    save_utf8_file(outfile, lines)
 
 
-def gen_id_hfile(lines, h_fn='ResID.h'):
+def gen_id_hfile(statements, h_fn='ResID.h'):
     """Generate a C header file of resource ID enumeration.
     """
-    def extract_filenames(lines):
-        return [line for line in lines if not line.startswith(':')]
+    def extract_filenames(statements):
+        return [sta for sta in statements if not sta.startswith(':')]
 
-    fns = extract_filenames(lines)
+    fns = extract_filenames(statements)
 
     lines = ['/** IDs of Resources */']
     lines += ["typedef enum {"]
@@ -236,13 +242,13 @@ def gen_id_hfile(lines, h_fn='ResID.h'):
 
 def parse_args(args):
     def do_link(args):
-        link(args.lines, args.dir, args.outfile)
+        link(args.statements, args.dir, args.outfile)
 
     def do_offset(args):
-        gen_offset_ifile(args.lines, args.dir, args.outfile)
+        gen_offset_ifile(args.statements, args.dir, args.outfile)
 
     def do_id(args):
-        gen_id_hfile(args.lines, args.outfile)
+        gen_id_hfile(args.statements, args.outfile)
 
     # create top-level parser
     parser = argparse.ArgumentParser(description=__doc__)
@@ -255,7 +261,7 @@ def parse_args(args):
 
     # create the parent parser of resource map file
     src = argparse.ArgumentParser(add_help=False)
-    src.add_argument('lines', metavar='map-file',
+    src.add_argument('statements', metavar='map-file',
         type=read_map_file,
         help='The map file of resources.')
 

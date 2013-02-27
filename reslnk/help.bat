@@ -1,4 +1,4 @@
-set bin=reslnk.py
+set bin=reslnk.exe
 
 %bin% -h
 pause
@@ -6,7 +6,7 @@ pause
 %bin% link -h
 pause
 
-%bin% offset -h
+%bin% map -h
 pause
 
 %bin% id -h

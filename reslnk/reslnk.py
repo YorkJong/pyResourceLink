@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 """
-The main goal of ResLnk is to link resource files into single one.
-
+The main goal of ResLnk (Resource Link) is to link resource files into single
+one (link command).  It also provids map command to generate resource map file
+in C array style, and id command to generate a C header file of resource ID
+enumeration.
 """
 __software__ = "Resource Link"
-__version__ = "0.01"
-__author__ = "Jiang Yu-Kuan <york_jiang@mars-semi.com.tw>"
+__version__ = "0.02"
+__author__ = "Jiang Yu-Kuan <yukuan.jiang@gmail.com>"
 __date__ = "2013/02/26 (initial version) ~ 2013/02/27 (last revision)"
 
 import os
@@ -148,7 +150,7 @@ def c_identifier(text):
 
 #-----------------------------------------------------------------------------
 
-def read_map_file(fn):
+def read_lst_file(fn):
     """Read a resource map file and return a file with description list.
     """
     def del_nonuse(lines):
@@ -177,9 +179,9 @@ def res_id_from_filename(fn):
                           c_identifier(base_main.replace('_', ' ')))
 
 
-#-----------------------------------------------------------------------------
-
-def offset_filename_pairs(statements, res_dir='.'):
+def map_from_statements(statements, res_dir='res'):
+    """Return (offset, size, filename) tuples from statements.
+    """
     pairs = []
     offset = 0
     for sta in statements:
@@ -190,31 +192,33 @@ def offset_filename_pairs(statements, res_dir='.'):
             offset = val
         else:
             fn = '{path}/{name}'.format(path=res_dir, name=sta)
-            pairs += [(offset, sta)]
             fsize = os.path.getsize(fn)
+            pairs += [(offset, fsize, sta)]
             offset += fsize
     return pairs
 
 
 #-----------------------------------------------------------------------------
 
-def link(statements, res_dir='.', outfile='res.bin'):
+def link(statements, res_dir='res', outfile='res.bin'):
     """Link resources into single file.
     """
-    pairs = offset_filename_pairs(statements, res_dir)
-    print pairs
+    pairs = map_from_statements(statements, res_dir)
     lines = ['']
 
     save_utf8_file(outfile, lines)
 
 
-def gen_offset_ifile(statements, res_dir='.', outfile='res_offset.i'):
-    """Generate a C included file that lists offsets of resources.
+def gen_map_ifile(statements, res_dir='res', outfile='res_map.i'):
+    """Generate a C included file that lists map of resources.
     """
-    pairs = offset_filename_pairs(statements, res_dir)
-    pass
     lines = ['']
+    lines += ['// %8s,   %8s     (in bytes)' % ('offset', 'size')]
+    lines += ['{  %8d,   %8d},   // %s (%s)'
+            % (offset, size, res_id_from_filename(fn), fn)
+            for offset, size, fn in map_from_statements(statements, res_dir)]
 
+    lines = prefix_authorship(lines)
     save_utf8_file(outfile, lines)
 
 
@@ -244,8 +248,8 @@ def parse_args(args):
     def do_link(args):
         link(args.statements, args.dir, args.outfile)
 
-    def do_offset(args):
-        gen_offset_ifile(args.statements, args.dir, args.outfile)
+    def do_map(args):
+        gen_map_ifile(args.statements, args.dir, args.outfile)
 
     def do_id(args):
         gen_id_hfile(args.statements, args.outfile)
@@ -261,9 +265,9 @@ def parse_args(args):
 
     # create the parent parser of resource map file
     src = argparse.ArgumentParser(add_help=False)
-    src.add_argument('statements', metavar='map-file',
-        type=read_map_file,
-        help='The map file of resources.')
+    src.add_argument('statements', metavar='lst-file',
+        type=read_lst_file,
+        help='The list file of resources.')
 
     # create the parent parser of resource directory
     dir = argparse.ArgumentParser(add_help=False)
@@ -283,14 +287,14 @@ def parse_args(args):
             (default "%s").
             ''' % sub.get_default('outfile'))
 
-    # create the parser for the "offset" command
-    sub = subparsers.add_parser('offset', parents=[src, dir],
-        help='generate a C included file listing byte offsets of resources.')
-    sub.set_defaults(func=do_offset,
-        outfile='res_offset.i')
+    # create the parser for the "map" command
+    sub = subparsers.add_parser('map', parents=[src, dir],
+        help='generate a resource map file in format of C array.')
+    sub.set_defaults(func=do_map,
+        outfile='res_map.i')
     sub.add_argument('-o', '--output', metavar='<file>', dest='outfile',
         help='''place the output into <file>, the C included file listing
-            the offsets (default "%s").
+            the offset, size pairs (default "%s").
             ''' % sub.get_default('outfile'))
 
     # create the parser for the "id" command

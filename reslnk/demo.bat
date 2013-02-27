@@ -1,5 +1,5 @@
 @echo off
-set reslnk=reslnk.py
+set reslnk=reslnk.exe
 
 set src=res.lst
 set tgt=res.bin
@@ -10,7 +10,7 @@ echo =^> Link resource files into single one.
 set src=res.lst
 set tgt=res_map.i
 set dir=res
-echo =^> Generate a resource map file in format of C array..
+echo =^> Generate a resource map file in format of C array.
 %reslnk% map -d%dir% -o%tgt% %src%
 
 set src=res.lst

@@ -12,3 +12,6 @@ pause
 %bin% id -h
 pause
 
+%bin% usb_head -h
+pause
+

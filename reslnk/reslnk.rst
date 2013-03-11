@@ -7,8 +7,8 @@ Resource Link
 
 :Author: Jiang Yu-Kuan
 :Contact: yukuan.jiang@gmail.com
-:Revision: 0001
-:Date: 2013-02-27
+:Revision: 0002
+:Date: 2013-03-11
 
 .. contents::
 
@@ -24,17 +24,17 @@ Usage
 =====
 Top level
 ---------
-usage: reslnk.exe [-h] [-v] {link,map,id} ...
-
 positional arguments:
-  {link,map,id}  commands
-    link         link resource files into single one.
-    map          generate a resource map file in format of C array.
-    id           generate a C header file of resource ID enumeration.
+  {link,map,id,usb_head}
+                        commands
+    link                link resource files into single one.
+    map                 generate a resource map file in format of C array.
+    id                  generate a C header file of resource ID enumeration.
+    usb_head            generate a USB ISP header file of A1016
 
 optional arguments:
-  -h, --help     show this help message and exit
-  -v, --version  show program's version number and exit
+  -h, --help            show this help message and exit
+  -v, --version         show program's version number and exit
 
 link command
 ------------
@@ -82,14 +82,34 @@ optional arguments:
                         place the output into <file>, the C header file of
                         resource ID enumeration (default "ResID.h").
 
+usb_head command
+----------------
+usage: reslnk.exe usb_head [-h] [-o <file>] binary-file
+
+positional arguments:
+  binary-file           The firmware binary file used to calculate checksum
+                        and filesize fields of the USB ISP header
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -o <file>, --output <file>
+                        place the output into <file>, the USB ISP header file
+                        of a firmware (default "usb_head.bin").
+
 ToDo List
 =========
 
 
 Version History
 ===============
+0.10
+----
+Released 2013-03-11
+
+* Added usb_head command to generate USB ISP header file of A1016
+
 0.02
-====
+----
 Released 2013-2-27
 
 * Initial version

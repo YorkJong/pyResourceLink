@@ -18,4 +18,10 @@ set tgt=ResID.h
 echo =^> Generate a C header file (%tgt%) of resource ID enumeration.
 %reslnk% id -o%tgt% %src%
 
+set src=fw.bin
+set tgt=usb_head.bin
+echo =^> generate a USB ISP header file of A1016.
+%reslnk% usb_head -o%tgt% %src%
+
+
 pause

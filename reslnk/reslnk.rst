@@ -7,7 +7,7 @@ Resource Link
 
 :Author: Jiang Yu-Kuan
 :Contact: yukuan.jiang@gmail.com
-:Revision: 0003
+:Revision: 0004
 :Date: 2013-03-13
 
 .. contents::
@@ -39,7 +39,8 @@ optional arguments:
 
 link command
 ------------
-usage: reslnk.exe link [-h] [-d <directory>] [-o <file>] lst-file
+usage: reslnk.exe link [-h] [-d <directory>] [-p <char hex>] [-o <file>]
+                       lst-file
 
 positional arguments:
   lst-file              The list file of resources.
@@ -49,6 +50,9 @@ optional arguments:
   -d <directory>, --dir <directory>
                         assign the <directory> to read resource files. The
                         default directory is ".".
+  -p <char hex>, --padding <char hex>
+                        specify the padding hex value of a char (default
+                        "0xFF").
   -o <file>, --output <file>
                         place the output into <file>, the file after linking
                         (default "res.bin").
@@ -108,6 +112,7 @@ Released 2013-03-13
 
 * Added usb_head command to generate USB ISP header file of A1016
 * Renamed usb_head command to checksum command
+* Added padding option to link command
 
 0.02
 ----

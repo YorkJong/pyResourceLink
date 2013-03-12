@@ -5,7 +5,7 @@ set src=res.lst
 set tgt=res.bin
 set dir=res
 echo =^> Link resource files into single one (%tgt%).
-%reslnk% link -d%dir% -o%tgt% %src%
+%reslnk% link -d%dir% -o%tgt% -p0x00 %src%
 
 set src=res.lst
 set tgt=ResMap.i
@@ -20,7 +20,7 @@ echo =^> Generate a C header file (%tgt%) of resource ID enumeration.
 
 set src=fw.bin
 set tgt=checksum.bin
-echo =^> generate a checksum header file for the USB ISP of A1016
+echo =^> Generate a checksum header file for the USB ISP of A1016
 %reslnk% checksum -o%tgt% %src%
 
 

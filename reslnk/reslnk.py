@@ -200,9 +200,11 @@ def map_from_statements(statements, res_dir='res'):
 
 #-----------------------------------------------------------------------------
 
-def link(statements, res_dir='res', outfile='res.bin'):
+def link(statements, res_dir='res', outfile='res.bin', padding_hex=0xFF):
     """Link resources into single file.
     """
+    assert padding_hex <= 0xFF
+
     begins, sizes, fns = zip(*map_from_statements(statements, res_dir))
     ends = list(begins[1:]) + [begins[-1] + sizes[-1]]
     spaces = [end - begin for begin, end in zip(begins, ends)]
@@ -212,7 +214,7 @@ def link(statements, res_dir='res', outfile='res.bin'):
             fn = '{path}/{name}'.format(path=res_dir, name=fn)
             with open(fn, 'rb') as infile:
                 raw = infile.read()
-            padding = '\xFF' * (space - len(raw))
+            padding = chr(padding_hex) * (space - len(raw))
             outfile.write(raw + padding)
 
 
@@ -284,7 +286,7 @@ def gen_checksum_headerfile(in_fn, out_fn):
 
 def parse_args(args):
     def do_link(args):
-        link(args.statements, args.dir, args.outfile)
+        link(args.statements, args.dir, args.outfile, args.padding)
 
     def do_map(args):
         gen_map_ifile(args.statements, args.dir, args.outfile)
@@ -294,6 +296,11 @@ def parse_args(args):
 
     def do_checksum(args):
         gen_checksum_headerfile(args.infile, args.outfile)
+
+    def hex_check(value):
+        value = int(eval(value))
+        assert value < 256
+        return value
 
     # create top-level parser
     parser = argparse.ArgumentParser(description=__doc__)
@@ -322,7 +329,10 @@ def parse_args(args):
     sub = subparsers.add_parser('link', parents=[src, dir],
         help='link resource files into single one.')
     sub.set_defaults(func=do_link,
-        outfile='res.bin')
+        outfile='res.bin', padding=0xFF)
+    sub.add_argument('-p', '--padding', metavar='<char hex>', type=hex_check,
+        help='''specify the padding hex value of a char (default "0x%X").
+            ''' % sub.get_default('padding'))
     sub.add_argument('-o', '--output', metavar='<file>', dest='outfile',
         help='''place the output into <file>, the file after linking
             (default "%s").
@@ -384,7 +394,7 @@ def main():
 
 
 if __name__ == '__main__':
-    parse_args(sys.argv[1:])
     #main()
+    parse_args(sys.argv[1:])
     #gen_checksum_headerfile('noheader.bin', 'usbheader.bin')
 

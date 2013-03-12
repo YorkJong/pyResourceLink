@@ -394,7 +394,7 @@ def main():
 
 
 if __name__ == '__main__':
-    #main()
-    parse_args(sys.argv[1:])
+    main()
+    #parse_args(sys.argv[1:])
     #gen_checksum_headerfile('noheader.bin', 'usbheader.bin')
 

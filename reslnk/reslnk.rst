@@ -7,8 +7,8 @@ Resource Link
 
 :Author: Jiang Yu-Kuan
 :Contact: yukuan.jiang@gmail.com
-:Revision: 0002
-:Date: 2013-03-11
+:Revision: 0003
+:Date: 2013-03-13
 
 .. contents::
 
@@ -25,12 +25,13 @@ Usage
 Top level
 ---------
 positional arguments:
-  {link,map,id,usb_head}
+  {link,map,id,checksum}
                         commands
     link                link resource files into single one.
     map                 generate a resource map file in format of C array.
     id                  generate a C header file of resource ID enumeration.
-    usb_head            generate a USB ISP header file of A1016
+    checksum            generate a checksum header file for the USB ISP of
+                        A1016.
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -54,7 +55,6 @@ optional arguments:
 
 map command
 -----------
-
 usage: reslnk.exe map [-h] [-d <directory>] [-o <file>] lst-file
 
 positional arguments:
@@ -82,9 +82,9 @@ optional arguments:
                         place the output into <file>, the C header file of
                         resource ID enumeration (default "ResID.h").
 
-usb_head command
+checksum command
 ----------------
-usage: reslnk.exe usb_head [-h] [-o <file>] binary-file
+usage: reslnk.exe checksum [-h] [-o <file>] binary-file
 
 positional arguments:
   binary-file           The firmware binary file used to calculate checksum
@@ -93,8 +93,8 @@ positional arguments:
 optional arguments:
   -h, --help            show this help message and exit
   -o <file>, --output <file>
-                        place the output into <file>, the USB ISP header file
-                        of a firmware (default "usb_head.bin").
+                        place the output into <file>, the checksum header file
+                        (default "checksum.bin").
 
 ToDo List
 =========
@@ -104,9 +104,10 @@ Version History
 ===============
 0.10
 ----
-Released 2013-03-11
+Released 2013-03-13
 
 * Added usb_head command to generate USB ISP header file of A1016
+* Renamed usb_head command to checksum command
 
 0.02
 ----

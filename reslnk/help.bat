@@ -12,6 +12,6 @@ pause
 %bin% id -h
 pause
 
-%bin% usb_head -h
+%bin% checksum -h
 pause
 

@@ -8,7 +8,7 @@ enumeration.
 __software__ = "Resource Link"
 __version__ = "0.10"
 __author__ = "Jiang Yu-Kuan <yukuan.jiang@gmail.com>"
-__date__ = "2013/02/26 (initial version) ~ 2013/03/11 (last revision)"
+__date__ = "2013/02/26 (initial version) ~ 2013/03/13 (last revision)"
 
 import os
 import sys
@@ -216,7 +216,7 @@ def link(statements, res_dir='res', outfile='res.bin'):
             outfile.write(raw + padding)
 
 
-def gen_map_ifile(statements, res_dir='res', outfile='res_map.i'):
+def gen_map_ifile(statements, res_dir='res', outfile='ResMap.i'):
     """Generate a C included file that lists map of resources.
     """
     lines = ['']
@@ -249,8 +249,8 @@ def gen_id_hfile(statements, h_fn='ResID.h'):
     save_utf8_file(h_fn, lines)
 
 
-def gen_usb_isp_headerfile(in_fn, out_fn):
-    """Generate a header file for USB ISP on A1016.
+def gen_checksum_headerfile(in_fn, out_fn):
+    """Generate a checksum header file for USB ISP of A1016.
     """
     ords = lambda x: [ord(c) for c in x]
     delittle = lambda x: x[0] | (x[1]<<8) | (x[2]<<16) | (x[3]<<24)
@@ -292,8 +292,8 @@ def parse_args(args):
     def do_id(args):
         gen_id_hfile(args.statements, args.outfile)
 
-    def do_usbhead(args):
-        gen_usb_isp_headerfile(args.infile, args.outfile)
+    def do_checksum(args):
+        gen_checksum_headerfile(args.infile, args.outfile)
 
     # create top-level parser
     parser = argparse.ArgumentParser(description=__doc__)
@@ -332,7 +332,7 @@ def parse_args(args):
     sub = subparsers.add_parser('map', parents=[src, dir],
         help='generate a resource map file in format of C array.')
     sub.set_defaults(func=do_map,
-        outfile='res_map.i')
+        outfile='ResMap.i')
     sub.add_argument('-o', '--output', metavar='<file>', dest='outfile',
         help='''place the output into <file>, the C included file listing
             the offset, size pairs (default "%s").
@@ -350,17 +350,17 @@ def parse_args(args):
 
     #--------------------------------------------------------------------------
 
-    # create the parser for the "usb_head" command
-    sub = subparsers.add_parser('usb_head',
-        help='generate a USB ISP header file of A1016')
-    sub.set_defaults(func=do_usbhead,
-        infile='fw.bin', outfile='usb_head.bin')
+    # create the parser for the "checksum" command
+    sub = subparsers.add_parser('checksum',
+        help='generate a checksum header file for the USB ISP of A1016.')
+    sub.set_defaults(func=do_checksum,
+        infile='fw.bin', outfile='checksum.bin')
     sub.add_argument('infile', metavar='binary-file',
         help='''The firmware binary file used to calculate checksum and
             filesize fields of the USB ISP header''')
     sub.add_argument('-o', '--output', metavar='<file>', dest='outfile',
-        help='''place the output into <file>, the USB ISP header file of
-            a firmware (default "%s").
+        help='''place the output into <file>, the checksum header file
+            (default "%s").
             ''' % sub.get_default('outfile'))
 
     #--------------------------------------------------------------------------
@@ -386,5 +386,5 @@ def main():
 if __name__ == '__main__':
     parse_args(sys.argv[1:])
     #main()
-    #gen_usb_isp_headerfile('noheader.bin', 'usbheader.bin')
+    #gen_checksum_headerfile('noheader.bin', 'usbheader.bin')
 

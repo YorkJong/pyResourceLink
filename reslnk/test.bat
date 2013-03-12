@@ -8,7 +8,7 @@ echo =^> Link resource files into single one (%tgt%).
 %reslnk% link -d%dir% -o%tgt% %src%
 
 set src=res.lst
-set tgt=res_map.i
+set tgt=ResMap.i
 set dir=res
 echo =^> Generate a resource map file (%tgt%) in format of C array.
 %reslnk% map -d%dir% -o%tgt% %src%
@@ -19,9 +19,9 @@ echo =^> Generate a C header file (%tgt%) of resource ID enumeration.
 %reslnk% id -o%tgt% %src%
 
 set src=fw.bin
-set tgt=usb_head.bin
-echo =^> generate a USB ISP header file of A1016.
-%reslnk% usb_head -o%tgt% %src%
+set tgt=checksum.bin
+echo =^> generate a checksum header file for the USB ISP of A1016
+%reslnk% checksum -o%tgt% %src%
 
 
 pause

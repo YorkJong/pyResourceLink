@@ -7,7 +7,7 @@ Resource Link
 
 :Author: Jiang Yu-Kuan
 :Contact: yukuan.jiang@gmail.com
-:Revision: 0004
+:Revision: 0005
 :Date: 2013-03-13
 
 .. contents::
@@ -25,13 +25,15 @@ Usage
 Top level
 ---------
 positional arguments:
-  {link,map,id,checksum}
+  {link,map,id,checksum,filesize}
                         commands
     link                link resource files into single one.
     map                 generate a resource map file in format of C array.
     id                  generate a C header file of resource ID enumeration.
     checksum            generate a checksum header file for the USB ISP of
                         A1016.
+    filesize            generate a file-size header file (4-byte file-size in
+                        a 256-byte header).
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -100,19 +102,33 @@ optional arguments:
                         place the output into <file>, the checksum header file
                         (default "checksum.bin").
 
+filesize command
+----------------
+usage: reslnk.exe filesize [-h] [-o <file>] binary-file
+
+positional arguments:
+  binary-file           The firmware binary file used to calculate file-size
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -o <file>, --output <file>
+                        place the output into <file>, the file-size header
+                        file (default "filesize.bin").
+
 ToDo List
 =========
 
 
 Version History
 ===============
-0.10
+0.11
 ----
 Released 2013-03-13
 
 * Added usb_head command to generate USB ISP header file of A1016
 * Renamed usb_head command to checksum command
 * Added padding option to link command
+* Added filesize command to generate a filesize header file
 
 0.02
 ----

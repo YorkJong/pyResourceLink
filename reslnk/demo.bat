@@ -20,8 +20,13 @@ echo =^> Generate a C header file (%tgt%) of resource ID enumeration.
 
 set src=fw.bin
 set tgt=checksum.bin
-echo =^> Generate a checksum header file for the USB ISP of A1016
+echo =^> Generate a checksum header file (%tgt%) for the USB ISP of A1016
 %reslnk% checksum -o%tgt% %src%
+
+set src=fw.bin
+set tgt=filesize.bin
+echo =^> Generate a filesize header file (%tgt%)
+%reslnk% filesize -o%tgt% %src%
 
 
 pause

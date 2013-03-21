@@ -7,8 +7,8 @@ Resource Link
 
 :Author: Jiang Yu-Kuan
 :Contact: yukuan.jiang@gmail.com
-:Revision: 0005
-:Date: 2013-03-13
+:Revision: 0006
+:Date: 2013-03-22
 
 .. contents::
 
@@ -121,14 +121,15 @@ ToDo List
 
 Version History
 ===============
-0.11
+0.12
 ----
-Released 2013-03-13
+Released 2013-03-22
 
 * Added usb_head command to generate USB ISP header file of A1016
 * Renamed usb_head command to checksum command
 * Added padding option to link command
 * Added filesize command to generate a filesize header file
+* Appended newline on generated resource map files (e.g. ResMap.i)
 
 0.02
 ----

@@ -6,9 +6,9 @@ in C array style, and id command to generate a C header file of resource ID
 enumeration.
 """
 __software__ = "Resource Link"
-__version__ = "0.11"
+__version__ = "0.12"
 __author__ = "Jiang Yu-Kuan <yukuan.jiang@gmail.com>"
-__date__ = "2013/02/26 (initial version) ~ 2013/03/13 (last revision)"
+__date__ = "2013/02/26 (initial version) ~ 2013/03/21 (last revision)"
 
 import os
 import sys
@@ -226,6 +226,7 @@ def gen_map_ifile(statements, res_dir='res', outfile='ResMap.i'):
     lines += ['{  %8d,   %8d},   // %s (%s)'
             % (offset, size, res_id_from_filename(fn), fn)
             for offset, size, fn in map_from_statements(statements, res_dir)]
+    lines += ['']
 
     lines = prefix_authorship(lines)
     save_utf8_file(outfile, lines)

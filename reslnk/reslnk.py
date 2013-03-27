@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
 """
 The main goal of ResLnk (Resource Link) is to link resource files into single
-one (link command).  It also provids map command to generate resource map file
-in C array style, and id command to generate a C header file of resource ID
-enumeration.
+one (link command). It provides map command to generate resource map file in C
+array style, id command to generate a C header file of resource ID enumeration.
+It also provids additional commmands (e.g. checksum, and filesize) for the USB
+boot and the bootloading on A1016 ICs.
 """
 __software__ = "Resource Link"
-__version__ = "0.12"
+__version__ = "0.99"
 __author__ = "Jiang Yu-Kuan <yukuan.jiang@gmail.com>"
-__date__ = "2013/02/26 (initial version) ~ 2013/03/21 (last revision)"
+__date__ = "2013/02/26 (initial version) ~ 2013/03/28 (last revision)"
 
 import os
 import sys
@@ -179,9 +180,11 @@ def res_id_from_filename(fn):
                           c_identifier(base_main.replace('_', ' ')))
 
 
-def map_from_statements(statements, res_dir='res'):
+def map_from_statements(statements, res_dir='res', align_bytes=1):
     """Return (offset, size, filename) tuples from statements.
     """
+    assert align_bytes >= 1
+
     tuples = []
     offset = 0
     for sta in statements:
@@ -195,17 +198,21 @@ def map_from_statements(statements, res_dir='res'):
             fsize = os.path.getsize(fn)
             tuples += [(offset, fsize, sta)]
             offset += fsize
+            offset = (offset + align_bytes - 1) / align_bytes * align_bytes
     return tuples
 
 
 #-----------------------------------------------------------------------------
 
-def link(statements, res_dir='res', outfile='res.bin', padding_hex=0xFF):
+def link(statements, res_dir='res', outfile='res.bin',
+        align_bytes=1, padding_hex=0xFF):
     """Link resources into single file.
     """
     assert padding_hex <= 0xFF
+    assert align_bytes >= 1
 
-    begins, sizes, fns = zip(*map_from_statements(statements, res_dir))
+    begins, sizes, fns = zip(
+        *map_from_statements(statements, res_dir, align_bytes))
     ends = list(begins[1:]) + [begins[-1] + sizes[-1]]
     spaces = [end - begin for begin, end in zip(begins, ends)]
 
@@ -218,14 +225,17 @@ def link(statements, res_dir='res', outfile='res.bin', padding_hex=0xFF):
             outfile.write(raw + padding)
 
 
-def gen_map_ifile(statements, res_dir='res', outfile='ResMap.i'):
+def gen_map_ifile(statements, res_dir='res', outfile='ResMap.i', align_bytes=1):
     """Generate a C included file that lists map of resources.
     """
+    assert align_bytes >= 1
+
     lines = ['']
     lines += ['// %8s,   %8s     (in bytes)' % ('offset', 'size')]
     lines += ['{  %8d,   %8d},   // %s (%s)'
             % (offset, size, res_id_from_filename(fn), fn)
-            for offset, size, fn in map_from_statements(statements, res_dir)]
+            for offset, size, fn
+            in map_from_statements(statements, res_dir, align_bytes)]
     lines += ['']
 
     lines = prefix_authorship(lines)
@@ -264,7 +274,7 @@ pack = lambda x: ''.join(chrs(belittle(x)))
 
 
 def gen_checksum_headerfile(in_fn, out_fn):
-    """Generate a checksum header file for USB ISP of A1016.
+    """Generate a checksum header file for booting from USB on A1016.
     """
     def calc_checksum(data):
         values = [unpack(data[i:i+4]) for i in xrange(0, len(data), 4)]
@@ -301,10 +311,10 @@ def gen_filesize_binaryfile(in_fn, out_fn):
 
 def parse_args(args):
     def do_link(args):
-        link(args.statements, args.dir, args.outfile, args.padding)
+        link(args.statements, args.dir, args.outfile, args.align, args.padding)
 
     def do_map(args):
-        gen_map_ifile(args.statements, args.dir, args.outfile)
+        gen_map_ifile(args.statements, args.dir, args.outfile, args.align)
 
     def do_id(args):
         gen_id_hfile(args.statements, args.outfile)
@@ -343,8 +353,17 @@ def parse_args(args):
             The default directory is "%s".
             """ % dir.get_default('dir'))
 
+    # create the parent parser of align bytes
+    aln = argparse.ArgumentParser(add_help=False)
+    aln.set_defaults(align=1)
+    aln.add_argument('-a', '--align', metavar='<number>',
+        type=int, choices=(1, 2, 4, 8, 16, 32, 64, 128, 256),
+        help="""specify the <number> of alignment bytes
+            (default "%d").
+            """ % aln.get_default('align'))
+
     # create the parser for the "link" command
-    sub = subparsers.add_parser('link', parents=[src, dir],
+    sub = subparsers.add_parser('link', parents=[src, dir, aln],
         help='link resource files into single one.')
     sub.set_defaults(func=do_link,
         outfile='res.bin', padding=0xFF)
@@ -357,7 +376,7 @@ def parse_args(args):
             ''' % sub.get_default('outfile'))
 
     # create the parser for the "map" command
-    sub = subparsers.add_parser('map', parents=[src, dir],
+    sub = subparsers.add_parser('map', parents=[src, dir, aln],
         help='generate a resource map file in format of C array.')
     sub.set_defaults(func=do_map,
         outfile='ResMap.i')
@@ -380,7 +399,7 @@ def parse_args(args):
 
     # create the parser for the "checksum" command
     sub = subparsers.add_parser('checksum',
-        help='generate a checksum header file for the USB ISP of A1016.')
+        help='generate a checksum header file for the USB boot on A1016.')
     sub.set_defaults(func=do_checksum,
         infile='fw.bin', outfile='checksum.bin')
     sub.add_argument('infile', metavar='binary-file',

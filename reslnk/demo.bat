@@ -5,13 +5,13 @@ set src=res.lst
 set tgt=res.bin
 set dir=res
 echo =^> Link resource files into single one (%tgt%).
-%reslnk% link -d%dir% -o%tgt% -p0x00 %src%
+%reslnk% link -d%dir% -o%tgt% -p0x00 -a4 %src%
 
 set src=res.lst
 set tgt=ResMap.i
 set dir=res
 echo =^> Generate a resource map file (%tgt%) in format of C array.
-%reslnk% map -d%dir% -o%tgt% %src%
+%reslnk% map -d%dir% -o%tgt% -a4 %src%
 
 set src=res.lst
 set tgt=ResID.h

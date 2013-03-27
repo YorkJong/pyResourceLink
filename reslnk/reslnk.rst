@@ -7,8 +7,8 @@ Resource Link
 
 :Author: Jiang Yu-Kuan
 :Contact: yukuan.jiang@gmail.com
-:Revision: 0006
-:Date: 2013-03-22
+:Revision: 0007
+:Date: 2013-03-28
 
 .. contents::
 
@@ -16,21 +16,25 @@ Resource Link
 Introduction
 ============
 The main goal of ResLnk (Resource Link) is to link resource files into single
-one (link command).  It also provids map command to generate resource map file
-in C array style, and id command to generate a C header file of resource ID
-enumeration.
+one (link command). It provides map command to generate resource map file in C
+array style, id command to generate a C header file of resource ID
+enumeration. It also provids additional commmands (e.g. checksum, and
+filesize) for the USB boot and the bootloading on A1016 ICs.
+
 
 Usage
 =====
 Top level
 ---------
+usage: reslnk.exe [-h] [-v] {link,map,id,checksum,filesize} ...
+
 positional arguments:
   {link,map,id,checksum,filesize}
                         commands
     link                link resource files into single one.
     map                 generate a resource map file in format of C array.
     id                  generate a C header file of resource ID enumeration.
-    checksum            generate a checksum header file for the USB ISP of
+    checksum            generate a checksum header file for the USB boot on
                         A1016.
     filesize            generate a file-size header file (4-byte file-size in
                         a 256-byte header).
@@ -41,7 +45,8 @@ optional arguments:
 
 link command
 ------------
-usage: reslnk.exe link [-h] [-d <directory>] [-p <char hex>] [-o <file>]
+usage: reslnk.exe link [-h] [-d <directory>] [-a <number>] [-p <char hex>]
+                       [-o <file>]
                        lst-file
 
 positional arguments:
@@ -52,6 +57,8 @@ optional arguments:
   -d <directory>, --dir <directory>
                         assign the <directory> to read resource files. The
                         default directory is ".".
+  -a <number>, --align <number>
+                        specify the <number> of alignment bytes (default "1").
   -p <char hex>, --padding <char hex>
                         specify the padding hex value of a char (default
                         "0xFF").
@@ -61,7 +68,7 @@ optional arguments:
 
 map command
 -----------
-usage: reslnk.exe map [-h] [-d <directory>] [-o <file>] lst-file
+usage: reslnk.exe map [-h] [-d <directory>] [-a <number>] [-o <file>] lst-file
 
 positional arguments:
   lst-file              The list file of resources.
@@ -71,9 +78,11 @@ optional arguments:
   -d <directory>, --dir <directory>
                         assign the <directory> to read resource files. The
                         default directory is ".".
+  -a <number>, --align <number>
+                        specify the <number> of alignment bytes (default "1").
   -o <file>, --output <file>
                         place the output into <file>, the C included file
-                        listing the offset, size pairs (default "res_map.i").
+                        listing the offset, size pairs (default "ResMap.i").
 
 id command
 ----------
@@ -121,6 +130,14 @@ ToDo List
 
 Version History
 ===============
+0.99
+----
+Released 2013-03-28
+
+* Added align option to map and link commands for specifying the number of
+  alignment bytes.
+
+
 0.12
 ----
 Released 2013-03-22

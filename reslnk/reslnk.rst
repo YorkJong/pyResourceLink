@@ -130,6 +130,11 @@ ToDo List
 
 Version History
 ===============
+1.00
+----
+Released 2013-08-??
+* Added the support of :kind command in resouce list file
+
 0.99
 ----
 Released 2013-03-28

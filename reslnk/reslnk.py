@@ -7,9 +7,9 @@ It also provids additional commmands (e.g. checksum, and filesize) for the USB
 boot and the bootloading on A1016 ICs.
 """
 __software__ = "Resource Link"
-__version__ = "0.99"
+__version__ = "1.00"
 __author__ = "Jiang Yu-Kuan <yukuan.jiang@gmail.com>"
-__date__ = "2013/02/26 (initial version) ~ 2013/03/28 (last revision)"
+__date__ = "2013/02/26 (initial version) ~ 2013/08/15 (last revision)"
 
 import os
 import sys
@@ -151,6 +151,16 @@ def c_identifier(text):
 
 #-----------------------------------------------------------------------------
 
+def is_numeric(str):
+    try:
+        offset = int(eval(str))
+    except:
+        return False
+    return True
+
+
+#-----------------------------------------------------------------------------
+
 def read_lst_file(fn):
     """Read a resource map file and return statement list.
     """
@@ -163,11 +173,12 @@ def read_lst_file(fn):
 
     # check :offset lines
     for line in lines:
-        if line.startswith(':'):
-            try:
-                offset = int(eval(line[1:]))
-            except:
-                raise ValueError('offset error -> %s' % line)
+        if not line.startswith(':'):
+            continue
+        cmd = line[1:].replace(' ', '')
+        if cmd.startswith('kind=') or is_numeric(cmd):
+            continue
+        raise ValueError('syntax error -> %s' % line)
     return lines
 
 
@@ -189,7 +200,10 @@ def map_from_statements(statements, res_dir='res', align_bytes=1):
     offset = 0
     for sta in statements:
         if sta.startswith(':'):
-            val = eval(sta[1:])
+            cmd = sta[1:].replace(' ', '')
+            if not is_numeric(cmd):
+                continue
+            val = eval(cmd)
             if val < offset:
                 raise ValueError('offset too small -> %s' % sta)
             offset = val
@@ -245,22 +259,66 @@ def gen_map_ifile(statements, res_dir='res', outfile='ResMap.i', align_bytes=1):
 def gen_id_hfile(statements, h_fn='ResID.h'):
     """Generate a C header file of resource ID enumeration.
     """
-    def extract_filenames(statements):
-        return [sta for sta in statements if not sta.startswith(':')]
+    def group_filenames(statements):
+        def is_kept(sta):
+            if not sta.startswith(':'):
+                return True
+            if sta[1:].replace(' ', '').startswith('kind='):
+                return True
+            return False
+        def remove_cmd_space(sta):
+            if not sta.startswith(':'):
+                return sta
+            return sta.replace(' ', '')
+        statements = [remove_cmd_space(sta) for sta in statements
+                                                    if is_kept(sta)]
+        kind = ''
+        items = []
+        fns = []
+        for sta in statements:
+            if sta.startswith(':kind='):
+                if fns:
+                    items += [(kind, fns)]
+                kind = sta.partition('=')[-1]
+                fns = []
+            else:
+                fns += [sta]
+        if fns:
+            items += [(kind, fns)]
+        print items
+        return items
 
-    fns = extract_filenames(statements)
+    def lines_from_fns(kind, fns, id_end):
+        ids = [res_id_from_filename(fn) for fn in fns]
+        id_begin = res_id_from_filename('BEGIN.' + kind)
+
+        lines = []
+        if id_end == '':
+            lines += ['    %s,' % id_begin]
+        else:
+            lines += ['    %s = %s,' % (id_begin, id_end)]
+        lines += ['    %s = %s,' % (ids[0], id_begin)]
+        lines += ['    %s,' % id for id in ids[1:]]
+        id_end = res_id_from_filename('END.' + kind)
+        lines += ['    %s,' % id_end]
+        lines += ['']
+        return lines, id_end
 
     lines = ['/** IDs of Resources */']
     lines += ["typedef enum {"]
-    lines += ['    %s,' % res_id_from_filename(fn) for fn in fns]
-    lines += ['    RES_End,']
+
+    id_end = ''
+    for kind, fns in group_filenames(statements):
+        tmp_lines, id_end = lines_from_fns(kind, fns, id_end)
+        lines += tmp_lines
+
+    lines += ['    RES_End = %s,' % id_end]
     lines += ['    RES_Total = RES_End']
     lines += ['} ResID;']
 
     lines = wrap_header_guard(lines, h_fn)
     lines = prefix_authorship(lines, comment_mark='//')
     save_utf8_file(h_fn, lines)
-
 
 #-----------------------------------------------------------------------------
 

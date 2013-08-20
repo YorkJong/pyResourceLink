@@ -266,24 +266,17 @@ def gen_id_hfile(statements, h_fn='ResID.h'):
             if re.match(':\s*kind\s*=', sta):
                 return True
             return False
+
         statements = [sta for sta in statements if is_kept(sta)]
-        kind = ''
-        items = []
-        fns = []
-        kind_cmd_pattern = re.compile(r':\s*kind\s*=\s*(.*)')
-        for sta in statements:
-            matched = kind_cmd_pattern.search(sta)
-            if matched:
-                if fns:
-                    items += [(kind, fns)]
-                kind = matched.group(1)
-                fns = []
-            else:
-                fns += [sta]
-        if fns:
-            items += [(kind, fns)]
-        print items #???
-        return items
+        lines = '\n'.join(statements)
+        kinds = re.findall(r':\s*kind\s*=\s*(.*)\s*\n', lines)
+        fns_lst = re.split(r':\s*kind\s*=.*\n', lines)
+        if statements[0].startswith(':'):
+            fns_lst = fns_lst[1:]
+        else:
+            kinds = [''] + kinds
+        fns_lst = (lines.split() for lines in fns_lst)
+        return zip(kinds, fns_lst)
 
     def lines_from_fns(kind, fns, id_end):
         ids = [res_id_from_filename(fn) for fn in fns]

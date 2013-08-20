@@ -7,8 +7,8 @@ Resource Link
 
 :Author: Jiang Yu-Kuan
 :Contact: yukuan.jiang@gmail.com
-:Revision: 0007
-:Date: 2013-03-28
+:Revision: 0008
+:Date: 2013-08-20
 
 .. contents::
 
@@ -132,7 +132,7 @@ Version History
 ===============
 1.00
 ----
-Released 2013-08-??
+Released 2013-08-22
 * Added the support of :kind command in resouce list file
 
 0.99

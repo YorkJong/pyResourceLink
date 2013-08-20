@@ -9,7 +9,7 @@ boot and the bootloading on A1016 ICs.
 __software__ = "Resource Link"
 __version__ = "1.00"
 __author__ = "Jiang Yu-Kuan <yukuan.jiang@gmail.com>"
-__date__ = "2013/02/26 (initial version) ~ 2013/08/15 (last revision)"
+__date__ = "2013/02/26 (initial version) ~ 2013/08/20 (last revision)"
 
 import os
 import sys
@@ -171,12 +171,13 @@ def read_lst_file(fn):
     with open(fn) as f:
         lines = del_nonuse(f.read().splitlines())
 
-    # check :offset lines
+    kind_cmd_pattern = re.compile(':\s*kind\s*=.*')
     for line in lines:
-        if not line.startswith(':'):
+        if not line.startswith(':'):        # check filename
             continue
-        cmd = line[1:].replace(' ', '')
-        if cmd.startswith('kind=') or is_numeric(cmd):
+        if kind_cmd_pattern.match(line):    # check :kind command
+            continue
+        if is_numeric(line[1:]):            # check :offset
             continue
         raise ValueError('syntax error -> %s' % line)
     return lines
@@ -200,10 +201,9 @@ def map_from_statements(statements, res_dir='res', align_bytes=1):
     offset = 0
     for sta in statements:
         if sta.startswith(':'):
-            cmd = sta[1:].replace(' ', '')
-            if not is_numeric(cmd):
+            if not is_numeric(sta[1:]):
                 continue
-            val = eval(cmd)
+            val = eval(sta[1:])
             if val < offset:
                 raise ValueError('offset too small -> %s' % sta)
             offset = val
@@ -285,7 +285,7 @@ def gen_id_hfile(statements, h_fn='ResID.h'):
                 fns += [sta]
         if fns:
             items += [(kind, fns)]
-        print items
+        print items #???
         return items
 
     def lines_from_fns(kind, fns, id_end):

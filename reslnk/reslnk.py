@@ -171,7 +171,7 @@ def read_lst_file(fn):
     with open(fn) as f:
         lines = del_nonuse(f.read().splitlines())
 
-    kind_cmd_pattern = re.compile(':\s*kind\s*=.*')
+    kind_cmd_pattern = re.compile(':\s*kind\s*=')
     for line in lines:
         if not line.startswith(':'):        # check filename
             continue
@@ -263,23 +263,20 @@ def gen_id_hfile(statements, h_fn='ResID.h'):
         def is_kept(sta):
             if not sta.startswith(':'):
                 return True
-            if sta[1:].replace(' ', '').startswith('kind='):
+            if re.match(':\s*kind\s*=', sta):
                 return True
             return False
-        def remove_cmd_space(sta):
-            if not sta.startswith(':'):
-                return sta
-            return sta.replace(' ', '')
-        statements = [remove_cmd_space(sta) for sta in statements
-                                                    if is_kept(sta)]
+        statements = [sta for sta in statements if is_kept(sta)]
         kind = ''
         items = []
         fns = []
+        kind_cmd_pattern = re.compile(r':\s*kind\s*=\s*(.*)')
         for sta in statements:
-            if sta.startswith(':kind='):
+            matched = kind_cmd_pattern.search(sta)
+            if matched:
                 if fns:
                     items += [(kind, fns)]
-                kind = sta.partition('=')[-1]
+                kind = matched.group(1)
                 fns = []
             else:
                 fns += [sta]

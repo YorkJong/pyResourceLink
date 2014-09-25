@@ -8,7 +8,7 @@ Resource Link
 :Author: Jiang Yu-Kuan
 :Contact: yukuan.jiang@gmail.com
 :Revision: 0008
-:Date: 2013-08-20
+:Date: 2014-09-25
 
 .. contents::
 
@@ -26,13 +26,14 @@ Usage
 =====
 Top level
 ---------
-usage: reslnk.exe [-h] [-v] {link,map,id,checksum,filesize} ...
+usage: reslnk.exe [-h] [-v] {link,map,bmap,id,checksum,filesize} ...
 
 positional arguments:
-  {link,map,id,checksum,filesize}
+  {link,map,bmap,id,checksum,filesize}
                         commands
     link                link resource files into single one.
     map                 generate a resource map file in format of C array.
+    bmap                generate a resource map file in binary format.
     id                  generate a C header file of resource ID enumeration.
     checksum            generate a checksum header file for the USB boot on
                         A1016.
@@ -84,6 +85,25 @@ optional arguments:
                         place the output into <file>, the C included file
                         listing the offset, size pairs (default "ResMap.i").
 
+bmap command
+------------
+usage: reslnk.exe bmap [-h] [-d <directory>] [-a <number>] [-o <file>] lst-file
+
+positional arguments:
+  lst-file              The list file of resources.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -d <directory>, --dir <directory>
+                        assign the <directory> to read resource files. The
+                        default directory is ".".
+  -a <number>, --align <number>
+                        specify the <number> of alignment bytes (default "1").
+  -o <file>, --output <file>
+                        place the output into <file>, the binary version of
+                        resource map file listing the offset, size pairs
+                        (default "ResMap.bin").
+
 id command
 ----------
 usage: reslnk.exe id [-h] [-o <file>] lst-file
@@ -130,10 +150,15 @@ ToDo List
 
 Version History
 ===============
+1.10
+----
+Released 2014-09-25
+* Added bmap command to generate binary formated map file.
+
 1.00
 ----
 Released 2013-08-22
-* Added the support of :kind command in resouce list file
+* Added the support of :kind command in resouce list file.
 
 0.99
 ----

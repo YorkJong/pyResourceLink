@@ -7,9 +7,9 @@ It also provids additional commmands (e.g. checksum, and filesize) for the USB
 boot and the bootloading on A1016 ICs.
 """
 __software__ = "Resource Link"
-__version__ = "1.00"
+__version__ = "1.10"
 __author__ = "Jiang Yu-Kuan <yukuan.jiang@gmail.com>"
-__date__ = "2013/02/26 (initial version) ~ 2013/08/20 (last revision)"
+__date__ = "2013/02/26 (initial version) ~ 2014/09/25 (last revision)"
 
 import os
 import sys
@@ -239,7 +239,8 @@ def link(statements, res_dir='res', outfile='res.bin',
             outfile.write(raw + padding)
 
 
-def gen_map_ifile(statements, res_dir='res', outfile='ResMap.i', align_bytes=1):
+def gen_map_ifile(statements,
+                  res_dir='res', outfile='ResMap.i', align_bytes=1):
     """Generate a C included file that lists map of resources.
     """
     assert align_bytes >= 1
@@ -254,6 +255,28 @@ def gen_map_ifile(statements, res_dir='res', outfile='ResMap.i', align_bytes=1):
 
     lines = prefix_authorship(lines)
     save_utf8_file(outfile, lines)
+
+
+def gen_map_binfile(statements,
+                    res_dir='res', outfile='ResMap.bin', align_bytes=1):
+    """Generate a binary map file of resources.
+    """
+    def str_from_val(x):
+        """"Return char-string from a two-byte value (high byte first)."""
+        return (chr((x >> 24) & 0xff) +
+                chr((x >> 16) & 0xff) +
+                chr((x >> 8) & 0xff) +
+                chr(x & 0xff))
+
+    assert align_bytes >= 1
+
+    lines = []
+    for offset, size, fn in map_from_statements(statements, res_dir, align_bytes):
+        lines += [str_from_val(offset), str_from_val(size)]
+    bytes = 'ResMapTb' + ''.join(lines)
+
+    with open(outfile, 'wb') as f:
+        f.write(bytes)
 
 
 def gen_id_hfile(statements, h_fn='ResID.h'):
@@ -364,6 +387,9 @@ def parse_args(args):
     def do_map(args):
         gen_map_ifile(args.statements, args.dir, args.outfile, args.align)
 
+    def do_bmap(args):
+        gen_map_binfile(args.statements, args.dir, args.outfile, args.align)
+
     def do_id(args):
         gen_id_hfile(args.statements, args.outfile)
 
@@ -431,6 +457,16 @@ def parse_args(args):
     sub.add_argument('-o', '--output', metavar='<file>', dest='outfile',
         help='''place the output into <file>, the C included file listing
             the offset, size pairs (default "%s").
+            ''' % sub.get_default('outfile'))
+
+    # create the parser for the "bmap" command
+    sub = subparsers.add_parser('bmap', parents=[src, dir, aln],
+        help='generate a resource map file in binary format.')
+    sub.set_defaults(func=do_bmap,
+        outfile='ResMap.bin')
+    sub.add_argument('-o', '--output', metavar='<file>', dest='outfile',
+        help='''place the output into <file>, the binary version of resource
+            map file listing the offset, size pairs (default "%s").
             ''' % sub.get_default('outfile'))
 
     # create the parser for the "id" command

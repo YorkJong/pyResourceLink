@@ -14,6 +14,12 @@ echo =^> Generate a resource map file (%tgt%) in format of C array.
 %reslnk% map -d%dir% -o%tgt% -a4 %src%
 
 set src=res.lst
+set tgt=ResMap.bin
+set dir=res
+echo =^> Generate a binary resource map file (%tgt%).
+%reslnk% bmap -d%dir% -o%tgt% -a4 %src%
+
+set src=res.lst
 set tgt=ResID.h
 echo =^> Generate a C header file (%tgt%) of resource ID enumeration.
 %reslnk% id -o%tgt% %src%

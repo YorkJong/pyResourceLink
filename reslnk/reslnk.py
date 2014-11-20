@@ -7,9 +7,9 @@ It also provids additional commmands (e.g. checksum, and filesize) for the USB
 boot and the bootloading on A1016 ICs.
 """
 __software__ = "Resource Link"
-__version__ = "1.10"
+__version__ = "1.11"
 __author__ = "Jiang Yu-Kuan <yukuan.jiang@gmail.com>"
-__date__ = "2013/02/26 (initial version) ~ 2014/09/25 (last revision)"
+__date__ = "2013/02/26 (initial version) ~ 2014/11/20 (last revision)"
 
 import os
 import sys
@@ -284,11 +284,16 @@ def gen_id_hfile(statements, h_fn='ResID.h'):
     """
     def group_filenames(statements):
         def is_kept(sta):
+            if sta.strip() == '':
+                return False
             if not sta.startswith(':'):
                 return True
             if re.match(':\s*kind\s*=', sta):
                 return True
             return False
+
+        def delete_space_lines(lines):
+            return (line for line in lines if line != '')
 
         statements = [sta for sta in statements if is_kept(sta)]
         lines = '\n'.join(statements)
@@ -298,7 +303,7 @@ def gen_id_hfile(statements, h_fn='ResID.h'):
             fns_lst = fns_lst[1:]
         else:
             kinds = [''] + kinds
-        fns_lst = (lines.split() for lines in fns_lst)
+        fns_lst = (delete_space_lines(lines.split('\n')) for lines in fns_lst)
         return zip(kinds, fns_lst)
 
     def lines_from_fns(kind, fns, id_end):

@@ -7,8 +7,8 @@ Resource Link
 
 :Author: Jiang Yu-Kuan
 :Contact: yukuan.jiang@gmail.com
-:Revision: 0008
-:Date: 2014-09-25
+:Revision: 0009
+:Date: 2014-11-20
 
 .. contents::
 
@@ -150,6 +150,11 @@ ToDo List
 
 Version History
 ===============
+1.11
+----
+Released 2014-11-20
+* Supported filenames with space characters
+
 1.10
 ----
 Released 2014-09-25

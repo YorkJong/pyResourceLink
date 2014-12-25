@@ -7,8 +7,8 @@ Resource Link
 
 :Author: Jiang Yu-Kuan
 :Contact: yukuan.jiang@gmail.com
-:Revision: 0009
-:Date: 2014-11-20
+:Revision: 0010
+:Date: 2014-12-25
 
 .. contents::
 
@@ -150,6 +150,11 @@ ToDo List
 
 Version History
 ===============
+1.12
+----
+Released 2014-12-25
+* Added MD5 string (put at 0xA0) to the checksum command
+
 1.11
 ----
 Released 2014-11-20

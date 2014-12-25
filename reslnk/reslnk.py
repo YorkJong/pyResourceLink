@@ -7,13 +7,14 @@ It also provids additional commmands (e.g. checksum, and filesize) for the USB
 boot and the bootloading on A1016 ICs.
 """
 __software__ = "Resource Link"
-__version__ = "1.11"
+__version__ = "1.12"
 __author__ = "Jiang Yu-Kuan <yukuan.jiang@gmail.com>"
-__date__ = "2013/02/26 (initial version) ~ 2014/11/20 (last revision)"
+__date__ = "2013/02/26 (initial version) ~ 2014/12/25 (last revision)"
 
 import os
 import sys
 import re
+import hashlib
 import argparse
 
 
@@ -351,6 +352,7 @@ pack = lambda x: ''.join(chrs(belittle(x)))
 
 def gen_checksum_headerfile(in_fn, out_fn):
     """Generate a checksum header file for booting from USB on A1016.
+    It also generates a MD5 checksum for ISP file checking.
     """
     def calc_checksum(data):
         values = [unpack(data[i:i+4]) for i in xrange(0, len(data), 4)]
@@ -361,12 +363,15 @@ def gen_checksum_headerfile(in_fn, out_fn):
     filesize = os.path.getsize(in_fn)
     with open(in_fn, 'rb') as f:
         check_str = calc_checksum(f.read(CHECK_LEN))
+    with open(in_fn, 'rb') as f:
+        md5_str = hashlib.md5(f.read()).hexdigest()
 
     len_str = pack(256 + filesize)
     data = ''.join([chr(0) * 0x20,
                     'SRAM6101', chr(0) * 24,
                     check_str,  chr(0) * 28,
-                    len_str, chr(0) * 156])
+                    len_str, chr(0) * 60,
+                    md5_str, chr(0) * 64])
     assert len(data) == 256
     with open(out_fn, 'wb') as f:
         f.write(data)

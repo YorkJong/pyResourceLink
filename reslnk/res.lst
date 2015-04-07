@@ -4,5 +4,13 @@ bat.png     # 2877 bytes
 
 :4096
 broom.png   # 3083 bytes
-:kind=C
+
+:kind=C1
+:kind=C2
+
+:kind=D
 candle.png  # 2771 bytes
+
+:kind=E1
+:kind=E2
+

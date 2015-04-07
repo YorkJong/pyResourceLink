@@ -7,8 +7,8 @@ Resource Link
 
 :Author: Jiang Yu-Kuan
 :Contact: yukuan.jiang@gmail.com
-:Revision: 0010
-:Date: 2014-12-25
+:Revision: 0011
+:Date: 2015-04-07
 
 .. contents::
 
@@ -150,6 +150,11 @@ ToDo List
 
 Version History
 ===============
+1.13
+----
+Released 2015-04-07
+* Added allowing for *empty kinds* in generated ResID.h file
+
 1.12
 ----
 Released 2014-12-25

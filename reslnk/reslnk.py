@@ -7,9 +7,9 @@ It also provids additional commmands (e.g. checksum, and filesize) for the USB
 boot and the bootloading on A1016 ICs.
 """
 __software__ = "Resource Link"
-__version__ = "1.12"
+__version__ = "1.13"
 __author__ = "Jiang Yu-Kuan <yukuan.jiang@gmail.com>"
-__date__ = "2013/02/26 (initial version) ~ 2014/12/25 (last revision)"
+__date__ = "2013/02/26 (initial version) ~ 2015/04/07 (last revision)"
 
 import os
 import sys
@@ -297,6 +297,7 @@ def gen_id_hfile(statements, h_fn='ResID.h'):
             return (line for line in lines if line != '')
 
         statements = [sta for sta in statements if is_kept(sta)]
+        statements += ['']      # for last empty kind statement
         lines = '\n'.join(statements)
         kinds = re.findall(r':\s*kind\s*=\s*(.*)\s*\n', lines)
         fns_lst = re.split(r':\s*kind\s*=.*\n', lines)
@@ -316,10 +317,13 @@ def gen_id_hfile(statements, h_fn='ResID.h'):
             lines += ['    %s,' % id_begin]
         else:
             lines += ['    %s = %s,' % (id_begin, id_end)]
-        lines += ['    %s = %s,' % (ids[0], id_begin)]
-        lines += ['    %s,' % id for id in ids[1:]]
         id_end = res_id_from_filename('END.' + kind)
-        lines += ['    %s,' % id_end]
+        if ids:
+            lines += ['    %s = %s,' % (ids[0], id_begin)]
+            lines += ['    %s,' % id for id in ids[1:]]
+            lines += ['    %s,' % id_end]
+        else:
+            lines += ['    %s = %s,' % (id_end, id_begin)]
         lines += ['']
         return lines, id_end
 

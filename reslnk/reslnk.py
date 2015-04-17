@@ -57,7 +57,7 @@ def wrap_header_guard(lines, h_fn):
     """Wrap a C header guard for a given line list.
     """
     def underscore(txt):
-        """Return a under_scores text from a CamelCase text.
+        """Return an under_scores text from a CamelCase text.
 
         This function will leave a CamelCase text unchanged.
         """

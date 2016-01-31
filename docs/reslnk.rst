@@ -7,7 +7,7 @@ Resource Link
 
 :Author: Jiang Yu-Kuan
 :Contact: yukuan.jiang@gmail.com
-:Revision: 0014
+:Revision: 0015
 :Date: 2016-01-31
 
 .. contents::
@@ -123,8 +123,11 @@ Version History
 ----
 Released 2016-02-XX
 
-- Removed checksum command
+- Added LICENSE.md
+- Hosted to bitbucket.org
+- Moved files for distribute.bat
 - Removed filesize command
+- Removed checksum command
 
 1.13
 ----

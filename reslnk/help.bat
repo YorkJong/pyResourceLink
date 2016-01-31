@@ -12,8 +12,5 @@ pause
 %bin% id -h
 pause
 
-%bin% checksum -h
-pause
-
 %bin% filesize -h
 pause

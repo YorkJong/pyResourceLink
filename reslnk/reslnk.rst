@@ -7,8 +7,8 @@ Resource Link
 
 :Author: Jiang Yu-Kuan
 :Contact: yukuan.jiang@gmail.com
-:Revision: 0011
-:Date: 2015-04-07
+:Revision: 0012
+:Date: 2016-01-31
 
 .. contents::
 
@@ -26,17 +26,15 @@ Usage
 =====
 Top level
 ---------
-usage: reslnk.exe [-h] [-v] {link,map,bmap,id,checksum,filesize} ...
+usage: reslnk.exe [-h] [-v] {link,map,bmap,id,filesize} ...
 
 positional arguments:
-  {link,map,bmap,id,checksum,filesize}
+  {link,map,bmap,id,filesize}
                         commands
     link                link resource files into single one.
     map                 generate a resource map file in format of C array.
     bmap                generate a resource map file in binary format.
     id                  generate a C header file of resource ID enumeration.
-    checksum            generate a checksum header file for the USB boot on
-                        A1016.
     filesize            generate a file-size header file (4-byte file-size in
                         a 256-byte header).
 
@@ -117,20 +115,6 @@ optional arguments:
                         place the output into <file>, the C header file of
                         resource ID enumeration (default "ResID.h").
 
-checksum command
-----------------
-usage: reslnk.exe checksum [-h] [-o <file>] binary-file
-
-positional arguments:
-  binary-file           The firmware binary file used to calculate checksum
-                        and filesize fields of the USB ISP header
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -o <file>, --output <file>
-                        place the output into <file>, the checksum header file
-                        (default "checksum.bin").
-
 filesize command
 ----------------
 usage: reslnk.exe filesize [-h] [-o <file>] binary-file
@@ -150,6 +134,13 @@ ToDo List
 
 Version History
 ===============
+1.14
+----
+Released 2016-02-XX
+
+- Removed checksum command
+
+
 1.13
 ----
 Released 2015-04-07

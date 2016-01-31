@@ -7,9 +7,9 @@ It also provids additional commmands (e.g. checksum, and filesize) for the USB
 boot and the bootloading on A1016 ICs.
 """
 __software__ = "Resource Link"
-__version__ = "1.13"
+__version__ = "1.14"
 __author__ = "Jiang Yu-Kuan <yukuan.jiang@gmail.com>"
-__date__ = "2013/02/26 (initial version) ~ 2015/04/07 (last revision)"
+__date__ = "2013/02/26 (initial version) ~ 2016/01/31 (last revision)"
 
 import os
 import sys
@@ -345,40 +345,9 @@ def gen_id_hfile(statements, h_fn='ResID.h'):
 
 #-----------------------------------------------------------------------------
 
-ords = lambda x: [ord(c) for c in x]
-delittle = lambda x: x[0] | (x[1]<<8) | (x[2]<<16) | (x[3]<<24)
-unpack = lambda x: delittle(ords(x))
-
 belittle = lambda x: (x&0xFF, (x>>8)&0xFF, (x>>16)&0xFF, (x>>24)&0xFF)
 chrs = lambda x: [chr(v) for v in x]
 pack = lambda x: ''.join(chrs(belittle(x)))
-
-
-def gen_checksum_headerfile(in_fn, out_fn):
-    """Generate a checksum header file for booting from USB on A1016.
-    It also generates a MD5 checksum for ISP file checking.
-    """
-    def calc_checksum(data):
-        values = [unpack(data[i:i+4]) for i in xrange(0, len(data), 4)]
-        checksum = 0xFFFFFFFF - (sum(values) & 0xFFFFFFFF)
-        return pack(checksum)
-
-    CHECK_LEN = 13 * 512
-    filesize = os.path.getsize(in_fn)
-    with open(in_fn, 'rb') as f:
-        check_str = calc_checksum(f.read(CHECK_LEN))
-    with open(in_fn, 'rb') as f:
-        md5_str = hashlib.md5(f.read()).hexdigest()
-
-    len_str = pack(256 + filesize)
-    data = ''.join([chr(0) * 0x20,
-                    'SRAM6101', chr(0) * 24,
-                    check_str,  chr(0) * 28,
-                    len_str, chr(0) * 60,
-                    md5_str, chr(0) * 64])
-    assert len(data) == 256
-    with open(out_fn, 'wb') as f:
-        f.write(data)
 
 
 def gen_filesize_binaryfile(in_fn, out_fn):
@@ -406,9 +375,6 @@ def parse_args(args):
 
     def do_id(args):
         gen_id_hfile(args.statements, args.outfile)
-
-    def do_checksum(args):
-        gen_checksum_headerfile(args.infile, args.outfile)
 
     def do_filesize(args):
         gen_filesize_binaryfile(args.infile, args.outfile)
@@ -495,19 +461,6 @@ def parse_args(args):
 
     #--------------------------------------------------------------------------
 
-    # create the parser for the "checksum" command
-    sub = subparsers.add_parser('checksum',
-        help='generate a checksum header file for the USB boot on A1016.')
-    sub.set_defaults(func=do_checksum,
-        infile='fw.bin', outfile='checksum.bin')
-    sub.add_argument('infile', metavar='binary-file',
-        help='''The firmware binary file used to calculate checksum and
-            filesize fields of the USB ISP header''')
-    sub.add_argument('-o', '--output', metavar='<file>', dest='outfile',
-        help='''place the output into <file>, the checksum header file
-            (default "%s").
-            ''' % sub.get_default('outfile'))
-
     # create the parser of the "filesize" command
     sub = subparsers.add_parser('filesize',
         help='''generate a file-size header file (4-byte file-size in a
@@ -544,5 +497,4 @@ def main():
 if __name__ == '__main__':
     main()
     #parse_args(sys.argv[1:])
-    #gen_checksum_headerfile('noheader.bin', 'usbheader.bin')
 

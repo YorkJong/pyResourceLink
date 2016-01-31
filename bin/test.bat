@@ -1,5 +1,5 @@
 @echo off
-set reslnk=reslnk.py
+set reslnk=..\reslnk\reslnk.py
 
 set src=res.lst
 set tgt=res.bin

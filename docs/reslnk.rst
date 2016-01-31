@@ -7,7 +7,7 @@ Resource Link
 
 :Author: Jiang Yu-Kuan
 :Contact: yukuan.jiang@gmail.com
-:Revision: 0015
+:Revision: 0016
 :Date: 2016-01-31
 
 .. contents::
@@ -123,6 +123,7 @@ Version History
 ----
 Released 2016-02-XX
 
+- Added CHANGELOG.md
 - Added LICENSE.md
 - Hosted to bitbucket.org
 - Moved files for distribute.bat
@@ -132,33 +133,33 @@ Released 2016-02-XX
 1.13
 ----
 Released 2015-04-07
-* Added allowing for *empty kinds* in generated ResID.h file
+- Added allowing for *empty kinds* in generated ResID.h file
 
 1.12
 ----
 Released 2014-12-25
-* Added MD5 string (put at 0xA0) to the checksum command
+- Added MD5 string (put at 0xA0) to the checksum command
 
 1.11
 ----
 Released 2014-11-20
-* Supported filenames with space characters
+- Supported filenames with space characters
 
 1.10
 ----
 Released 2014-09-25
-* Added bmap command to generate binary formated map file.
+- Added bmap command to generate binary formated map file.
 
 1.00
 ----
 Released 2013-08-22
-* Added the support of :kind command in resouce list file.
+- Added the support of :kind command in resouce list file.
 
 0.99
 ----
 Released 2013-03-28
 
-* Added align option to map and link commands for specifying the number of
+- Added align option to map and link commands for specifying the number of
   alignment bytes.
 
 
@@ -166,16 +167,16 @@ Released 2013-03-28
 ----
 Released 2013-03-22
 
-* Added usb_head command to generate USB ISP header file of A1016
-* Renamed usb_head command to checksum command
-* Added padding option to link command
-* Added filesize command to generate a filesize header file
-* Appended newline on generated resource map files (e.g. ResMap.i)
+- Added usb_head command to generate USB ISP header file of A1016
+- Renamed usb_head command to checksum command
+- Added padding option to link command
+- Added filesize command to generate a filesize header file
+- Appended newline on generated resource map files (e.g. ResMap.i)
 
 0.02
 ----
 Released 2013-2-27
 
-* Initial version
-* Added commands of link, map, and id
+- Initial version
+- Added commands of link, map, and id
 

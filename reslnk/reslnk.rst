@@ -7,7 +7,7 @@ Resource Link
 
 :Author: Jiang Yu-Kuan
 :Contact: yukuan.jiang@gmail.com
-:Revision: 0012
+:Revision: 0014
 :Date: 2016-01-31
 
 .. contents::
@@ -26,17 +26,15 @@ Usage
 =====
 Top level
 ---------
-usage: reslnk.exe [-h] [-v] {link,map,bmap,id,filesize} ...
+usage: reslnk.exe [-h] [-v] {link,map,bmap,id} ...
 
 positional arguments:
-  {link,map,bmap,id,filesize}
+  {link,map,bmap,id}
                         commands
     link                link resource files into single one.
     map                 generate a resource map file in format of C array.
     bmap                generate a resource map file in binary format.
     id                  generate a C header file of resource ID enumeration.
-    filesize            generate a file-size header file (4-byte file-size in
-                        a 256-byte header).
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -115,19 +113,6 @@ optional arguments:
                         place the output into <file>, the C header file of
                         resource ID enumeration (default "ResID.h").
 
-filesize command
-----------------
-usage: reslnk.exe filesize [-h] [-o <file>] binary-file
-
-positional arguments:
-  binary-file           The firmware binary file used to calculate file-size
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -o <file>, --output <file>
-                        place the output into <file>, the file-size header
-                        file (default "filesize.bin").
-
 ToDo List
 =========
 
@@ -139,7 +124,7 @@ Version History
 Released 2016-02-XX
 
 - Removed checksum command
-
+- Removed filesize command
 
 1.13
 ----

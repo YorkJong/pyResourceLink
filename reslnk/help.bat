@@ -11,6 +11,3 @@ pause
 
 %bin% id -h
 pause
-
-%bin% filesize -h
-pause

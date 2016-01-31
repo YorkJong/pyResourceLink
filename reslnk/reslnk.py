@@ -345,24 +345,6 @@ def gen_id_hfile(statements, h_fn='ResID.h'):
 
 #-----------------------------------------------------------------------------
 
-belittle = lambda x: (x&0xFF, (x>>8)&0xFF, (x>>16)&0xFF, (x>>24)&0xFF)
-chrs = lambda x: [chr(v) for v in x]
-pack = lambda x: ''.join(chrs(belittle(x)))
-
-
-def gen_filesize_binaryfile(in_fn, out_fn):
-    """Generate a file-size header file (4-byte file-size in a 256-byte header
-    ).
-    """
-    filesize = os.path.getsize(in_fn)
-    data = pack(filesize) + chr(0) * (256 - 4)
-
-    with open(out_fn, 'wb') as f:
-        f.write(data)
-
-
-#-----------------------------------------------------------------------------
-
 def parse_args(args):
     def do_link(args):
         link(args.statements, args.dir, args.outfile, args.align, args.padding)
@@ -375,9 +357,6 @@ def parse_args(args):
 
     def do_id(args):
         gen_id_hfile(args.statements, args.outfile)
-
-    def do_filesize(args):
-        gen_filesize_binaryfile(args.infile, args.outfile)
 
     def hex_check(value):
         value = int(eval(value))
@@ -457,21 +436,6 @@ def parse_args(args):
     sub.add_argument('-o', '--output', metavar='<file>', dest='outfile',
         help='''place the output into <file>, the C header file of
             resource ID enumeration (default "%s").
-            ''' % sub.get_default('outfile'))
-
-    #--------------------------------------------------------------------------
-
-    # create the parser of the "filesize" command
-    sub = subparsers.add_parser('filesize',
-        help='''generate a file-size header file (4-byte file-size in a
-            256-byte header).''')
-    sub.set_defaults(func=do_filesize,
-        infile='fw.bin', outfile='filesize.bin')
-    sub.add_argument('infile', metavar='binary-file',
-        help='''The firmware binary file used to calculate file-size''')
-    sub.add_argument('-o', '--output', metavar='<file>', dest='outfile',
-        help='''place the output into <file>, the file-size header file
-            (default "%s").
             ''' % sub.get_default('outfile'))
 
     #--------------------------------------------------------------------------

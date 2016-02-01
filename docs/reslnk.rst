@@ -7,8 +7,8 @@ Resource Link
 
 :Author: Jiang Yu-Kuan
 :Contact: yukuan.jiang@gmail.com
-:Revision: 0016
-:Date: 2016-01-31
+:Revision: 0017
+:Date: 2016-02-01
 
 .. contents::
 
@@ -16,10 +16,10 @@ Resource Link
 Introduction
 ============
 The main goal of ResLnk (Resource Link) is to link resource files into single
-one (link command). It provides map command to generate resource map file in C
-array style, id command to generate a C header file of resource ID
-enumeration. It also provids additional commmands (e.g. checksum, and
-filesize) for the USB boot and the bootloading on A1016 ICs.
+one (*link* command). It provides also *map* command to generate a resource
+map file in C array style, *bmap* command to generate the resource map file in
+binary style, and *id* command to generate a C header file of resource ID
+enumeration.
 
 
 Usage
@@ -121,8 +121,9 @@ Version History
 ===============
 1.14
 ----
-Released 2016-02-XX
+Released 2016-02-01
 
+- Added README.md
 - Added CHANGELOG.md
 - Added LICENSE.md
 - Hosted to bitbucket.org
@@ -133,21 +134,25 @@ Released 2016-02-XX
 1.13
 ----
 Released 2015-04-07
+
 - Added allowing for *empty kinds* in generated ResID.h file
 
 1.12
 ----
 Released 2014-12-25
+
 - Added MD5 string (put at 0xA0) to the checksum command
 
 1.11
 ----
 Released 2014-11-20
+
 - Supported filenames with space characters
 
 1.10
 ----
 Released 2014-09-25
+
 - Added bmap command to generate binary formated map file.
 
 1.00

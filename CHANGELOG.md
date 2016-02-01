@@ -1,5 +1,6 @@
-### 1.14 (2016-02-XX)
+### 1.14 (2016-02-01)
 
+- Added README.md
 - Added CHANGELOG.md
 - Added LICENSE.md
 - Hosted to bitbucket.org

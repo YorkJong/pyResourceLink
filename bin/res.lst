@@ -1,16 +1,16 @@
-:0x00   # start offset (default is 0x00)
-:kind=B
-bat.png     # 2877 bytes
+:0x00       # start offset (default is 0x00)
 
-:4096
-broom.png   # 3083 bytes
+:kind=B     # kind B for the enumeration
+bat.png     # file size: 2877 bytes
+
+:4096       # offset to address: 4096
+broom.png   # file size: 3083 bytes
 
 :kind=C1
 :kind=C2
 
 :kind=D
-candle.png  # 2771 bytes
+candle.png  # file size: 2771 bytes
 
 :kind=E1
 :kind=E2
-

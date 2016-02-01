@@ -73,8 +73,9 @@ candle.png  # file size: 2771 bytes
 ```
 * You can apply a generated *ResMap.i* with a C `struct` to read the content of
   a resource.
-* A example C struc look like as follows:
-    ```c
+
+### An example C struc with *ResMap.i* looks like as follows: ###
+```c
 #include "ResID.h"
 
 
@@ -105,7 +106,7 @@ uint32_t Res_Bytes(ResID id)
     Res_initMapTblIfHasNotDone();
     return _resMap[id].nBytes;
 }
-    ```
+```
 
 
 ### generated *ResID.h* ###

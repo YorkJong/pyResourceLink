@@ -1,6 +1,6 @@
-# LangConvert #
+# ResourceLink #
 
-LangConvert is an open source Python application to link resource files into
+ResourceLink is an open source Python application to link resource files into
 single one (*link* command). It also provides *map* command to generate a
 resource map file in C array style, *bmap* command to generate the resource map
 file in binary style, and *id* command to generate a C header file of resource

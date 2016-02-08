@@ -1,5 +1,6 @@
-### 1.14 (2016-02-01)
+### 1.14 (2016-02-08)
 
+- Extracted myutil.py from reslnk.py
 - Added README.md
 - Added CHANGELOG.md
 - Added LICENSE.md

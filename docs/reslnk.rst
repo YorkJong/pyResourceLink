@@ -7,8 +7,8 @@ Resource Link
 
 :Author: Jiang Yu-Kuan
 :Contact: yukuan.jiang@gmail.com
-:Revision: 0017
-:Date: 2016-02-01
+:Revision: 0018
+:Date: 2016-02-08
 
 .. contents::
 
@@ -121,8 +121,9 @@ Version History
 ===============
 1.14
 ----
-Released 2016-02-01
+Released 2016-02-08
 
+- Extracted myutil.py from reslnk.py
 - Added README.md
 - Added CHANGELOG.md
 - Added LICENSE.md

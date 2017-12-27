@@ -3,13 +3,11 @@
 The main goal of ResLnk (Resource Link) is to link resource files into single
 one (link command). It provides map command to generate resource map file in C
 array style, id command to generate a C header file of resource ID enumeration.
-It also provids additional commmands (e.g. checksum, and filesize) for the USB
-boot and the bootloading on A1016 ICs.
 """
 __software__ = "Resource Link"
 __version__ = "1.14"
 __author__ = "Jiang Yu-Kuan <yukuan.jiang@gmail.com>"
-__date__ = "2013/02/26 (initial version) ~ 2016/02/08 (last revision)"
+__date__ = "2013/02/26 (initial version) ~ 2017/12/27 (last revision)"
 
 import os
 import sys

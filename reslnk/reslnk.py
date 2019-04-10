@@ -7,14 +7,15 @@ array style, id command to generate a C header file of resource ID enumeration.
 __software__ = "Resource Link"
 __version__ = "1.14"
 __author__ = "Jiang Yu-Kuan <yukuan.jiang@gmail.com>"
-__date__ = "2013/02/26 (initial version) ~ 2017/12/27 (last revision)"
+__date__ = "2013/02/26 (initial version) ~ 2019/04/10 (last revision)"
 
 import os
 import sys
 import re
 import argparse
 
-from myutil import *
+from myutil import save_utf8_file, is_numeric
+from myutil import prefix_info, wrap_header_guard, c_identifier
 
 
 #-----------------------------------------------------------------------------
@@ -31,7 +32,7 @@ def read_lst_file(fn):
     with open(fn) as f:
         lines = del_nonuse(f.read().splitlines())
 
-    kind_cmd_pattern = re.compile(':\s*kind\s*=')
+    kind_cmd_pattern = re.compile(r':\s*kind\s*=')
     for line in lines:
         if not line.startswith(':'):        # check filename
             continue
@@ -146,7 +147,7 @@ def gen_map_binfile(statements,
     assert align_bytes >= 1
 
     lines = []
-    for offset, size, fn in map_from_statements(statements, res_dir, align_bytes):
+    for offset, size, _fn in map_from_statements(statements, res_dir, align_bytes):
         lines += [str_from_val(offset), str_from_val(size)]
     bytes = 'ResMapTb' + ''.join(lines)
 
@@ -163,7 +164,7 @@ def gen_id_hfile(statements, h_fn='ResID.h'):
                 return False
             if not sta.startswith(':'):
                 return True
-            if re.match(':\s*kind\s*=', sta):
+            if re.match(r':\s*kind\s*=', sta):
                 return True
             return False
 

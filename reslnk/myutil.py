@@ -22,7 +22,7 @@ def save_utf8_file(fn, lines):
 
 
 def main_basename(path):
-    """Return a main name of a basename of a given file path.
+    r"""Return a main name of a basename of a given file path.
 
     Example
     -------
@@ -30,7 +30,7 @@ def main_basename(path):
     'MsgID.h'
     """
     base = os.path.basename(path)
-    base_main, base_ext = os.path.splitext(base)
+    base_main, _base_ext = os.path.splitext(base)
     return base_main
 
 
@@ -40,7 +40,7 @@ def main_basename(path):
 
 def is_numeric(str):
     try:
-        offset = int(eval(str))
+        _offset = int(eval(str))
     except:
         return False
     return True

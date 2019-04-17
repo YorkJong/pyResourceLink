@@ -5,9 +5,9 @@ one (link command). It provides map command to generate resource map file in C
 array style, id command to generate a C header file of resource ID enumeration.
 """
 __software__ = "Resource Link"
-__version__ = "1.14"
+__version__ = "1.15"
 __author__ = "Jiang Yu-Kuan <yukuan.jiang@gmail.com>"
-__date__ = "2013/02/26 (initial version) ~ 2019/04/10 (last revision)"
+__date__ = "2013/02/26 (initial version) ~ 2019/04/17 (last revision)"
 
 import os
 import sys

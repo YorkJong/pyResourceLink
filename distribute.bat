@@ -1,7 +1,7 @@
 @echo off
 
 set target=reslnk
-set ver_num=1.14
+set ver_num=1.15
 set dist_name=ResourceLink
 
 set dist_dir=%dist_name%-%ver_num%-bin

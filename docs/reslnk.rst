@@ -7,8 +7,8 @@ Resource Link
 
 :Author: Jiang Yu-Kuan
 :Contact: yukuan.jiang@gmail.com
-:Revision: 0018
-:Date: 2016-02-08
+:Revision: 0019
+:Date: 2019-04-17
 
 .. contents::
 
@@ -119,6 +119,13 @@ ToDo List
 
 Version History
 ===============
+1.15
+----
+Released 2019-04-17
+
+- Changed naming rule of header-guard macro (from _FOO_H to FOO_H_)
+
+
 1.14
 ----
 Released 2016-02-08

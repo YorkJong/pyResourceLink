@@ -3,7 +3,7 @@
 This module put my utility functions
 """
 __author__ = "Jiang Yu-Kuan <yukuan.jiang@gmail.com>"
-__date__ = "2016/02/08 (initial version) ~ 2016/04/27 (last revision)"
+__date__ = "2016/02/08 (initial version) ~ 2019/04/17 (last revision)"
 
 import re
 import os
@@ -142,7 +142,7 @@ def wrap_header_guard(lines, h_fn):
         s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', txt)
         return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
 
-    h_fn_sig = '_%s_H' % underscore(main_basename(h_fn)).upper()
+    h_fn_sig = '%s_H_' % underscore(main_basename(h_fn)).upper()
     begin = ['#ifndef %s' % h_fn_sig]
     begin += ['#define %s' % h_fn_sig, '', '']
     end = ['', '', '#endif // %s' % h_fn_sig, '']
